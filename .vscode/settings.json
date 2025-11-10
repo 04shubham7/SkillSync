@@ -1,0 +1,10 @@
+{
+  // Exclude Convex generated files from the VS Code file watcher and explorer to avoid repeated rebuilds.
+  "files.watcherExclude": {
+    "**/convex/_generated/**": true,
+    "**/convex/_generated": true
+  },
+  "files.exclude": {
+    "**/convex/_generated/**": true
+  }
+}
