@@ -20,6 +20,7 @@ import Image from "next/image";
 import { motion, useInView, useAnimation } from "framer-motion";
 import LoaderUI from "@/components/LoaderUI";
 import SpotlightCard from "@/components/ui/SpotlightCard";
+import Hero from "@/components/Hero";
 
 // Custom hook for scroll animations
 const useScrollAnimation = () => {
@@ -379,6 +380,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
+      <Hero />
       {/* Background Grid */}
       {/* <div className="fixed inset-0 -z-10">
                 <div className="absolute inset-0 bg-zinc-900" />
