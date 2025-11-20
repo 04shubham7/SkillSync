@@ -10,30 +10,17 @@ function Footer() {
                     <div className="flex items-center gap-2">
                         <Blocks className="size-4 sm:size-5 text-blue-500 dark:text-blue-400" />
                         <span className="text-center md:text-left text-xs sm:text-sm">
-                            Built for Interviews, by bluemincoder
+                            SkillSync - Elevate Your Interviews, by 04shubham7
                         </span>
                     </div>
 
                     {/* Right: Links */}
                     <div className="flex flex-wrap justify-center md:justify-end items-center gap-4 sm:gap-6 text-xs sm:text-sm">
-                        <Link
-                            href="https://github.com/bluemincoder"
-                            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                        >
-                            GitHub
-                        </Link>
-                        <Link
-                            href="https://www.linkedin.com/in/bluemincoder/"
-                            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                        >
-                            LinkedIn
-                        </Link>
-                        <Link
-                            href="mailto:minaal07satankar@gmail.com?subject=Hello%20There&body=I%20would%20like%20to%20connect%20with%20you."
-                            className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                        >
-                            Email
-                        </Link>
+                        {['GitHub','LinkedIn','Email'].map(label => (
+                          <Link key={label} href="#" className="relative link-glow px-2 py-1 rounded-md transition">
+                            <span className="relative z-10">{label}</span>
+                          </Link>
+                        ))}
                     </div>
                 </div>
             </div>

@@ -26,7 +26,7 @@ function ActionCard({
 
   return (
     <SpotlightCard
-      className="h-full w-full cursor-pointer flex flex-col justify-start items-start p-4 sm:p-6 md:p-8 bg-white/5 shadow-xl backdrop-blur-md transition-all duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:border-blue-400/40 group-hover:bg-white/10 dark:border-neutral-800"
+      className="group h-full w-full cursor-pointer flex flex-col justify-start items-start p-6 sm:p-7 md:p-9 glass-surface glass-interactive rounded-xl overflow-hidden"
       spotlightColor={spotlightColor}
     >
       <div
@@ -38,20 +38,19 @@ function ActionCard({
         {/* Icon */}
         <div className="flex items-start justify-start mb-6">
           <div
-            className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center bg-gradient-to-br from-white/10 to-white/5 border border-white/20 group-hover:from-blue-400/30 group-hover:to-blue-600/20 transition-all duration-300 shadow-md"
-            style={{
-              background: `linear-gradient(135deg, ${action.gradient})`,
-            }}
+            className="relative w-14 h-14 sm:w-18 sm:h-18 rounded-xl flex items-center justify-center bg-gradient-to-br from-white/15 to-white/8 border border-white/15 shadow-lg transition-all duration-400 group-hover:shadow-2xl group-hover:shadow-blue-500/20 group-hover:border-white/40"
+            style={{ background: `linear-gradient(135deg, ${action.gradient})` }}
           >
-            <action.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
+            <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 bg-gradient-to-r from-transparent via-white/15 to-transparent transition-opacity duration-400" />
+            <action.icon className="w-7 h-7 sm:w-9 sm:h-9 text-white drop-shadow-xl group-hover:scale-110 transition-all duration-400" />
           </div>
         </div>
         {/* Title */}
-        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-2 text-start drop-shadow-sm">
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 text-start tracking-tight drop-shadow-lg group-hover:text-blue-100 transition-colors duration-300">
           {action.title}
         </h3>
         {/* Description */}
-        <p className="text-sm sm:text-base text-black dark:text-white/80 text-start font-normal">
+        <p className="text-sm sm:text-base text-zinc-300 text-start font-normal">
           {action.description}
         </p>
       </div>

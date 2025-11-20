@@ -1,9 +1,7 @@
 "use client";
 
 import { useUserRole } from "@/hooks/useUserRole";
-import { useQuery } from "convex/react";
 import { useState, useEffect, useRef } from "react";
-import { api } from "../../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
 import MeetingModal from "@/components/MeetingModal";
 import {
@@ -16,11 +14,12 @@ import {
 } from "lucide-react";
 import MeetingCard from "@/components/MeetingCard";
 import { useSession, signIn } from "next-auth/react";
-import Image from "next/image";
 import { motion, useInView, useAnimation } from "framer-motion";
 import LoaderUI from "@/components/LoaderUI";
 import SpotlightCard from "@/components/ui/SpotlightCard";
 import Hero from "@/components/Hero";
+import JoinByCodeCard from "@/components/JoinByCodeCard";
+import Laptop3D from "@/components/Laptop3D";
 
 // Custom hook for scroll animations
 const useScrollAnimation = () => {
@@ -40,11 +39,31 @@ const useScrollAnimation = () => {
 // Component for signed-in functionality
 function SignedInContent() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const { isInterviewer, isLoading } = useUserRole();
-  const interviews = useQuery(api.interviews.getMyInterviews, {
-    userEmail: session?.user?.email || "",
-  });
+  const [interviews, setInterviews] = useState<any[] | null>(null);
+  const [loadingInterviews, setLoadingInterviews] = useState(false);
+
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+    let cancelled = false;
+    const load = async () => {
+      setLoadingInterviews(true);
+      try {
+        const res = await fetch('/api/interviews');
+        if (!res.ok) throw new Error('Failed to load interviews');
+        const data = await res.json();
+        if (!cancelled) setInterviews(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) setInterviews([]);
+      } finally {
+        if (!cancelled) setLoadingInterviews(false);
+      }
+    };
+    load();
+    return () => { cancelled = true; };
+  }, [status]);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState<"start" | "join">();
 
@@ -88,11 +107,11 @@ function SignedInContent() {
                   <Code2 className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-2 text-start drop-shadow-sm">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 text-start drop-shadow-sm">
                 New Call
               </h3>
-              <p className="text-sm sm:text-base text-black dark:text-white/80 text-start font-normal">
-                Start an instant call
+              <p className="text-sm sm:text-base text-zinc-300 text-start font-normal">
+                Launch instant interview session
               </p>
             </div>
           </SpotlightCard>
@@ -117,14 +136,17 @@ function SignedInContent() {
                   <Users className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-2 text-start drop-shadow-sm">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 text-start drop-shadow-sm">
                 Join Interview
               </h3>
-              <p className="text-sm sm:text-base text-black dark:text-white/80 text-start font-normal">
-                Enter via invitation link
+              <p className="text-sm sm:text-base text-zinc-300 text-start font-normal">
+                Connect with your invite link
               </p>
             </div>
           </SpotlightCard>
+
+          {/* Join by Code */}
+          <JoinByCodeCard />
 
           {/* Schedule */}
           <SpotlightCard
@@ -146,11 +168,11 @@ function SignedInContent() {
                   <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-2 text-start drop-shadow-sm">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 text-start drop-shadow-sm">
                 Schedule
               </h3>
-              <p className="text-sm sm:text-base text-black dark:text-white/80 text-start font-normal">
-                Plan upcoming interviews
+              <p className="text-sm sm:text-base text-zinc-300 text-start font-normal">
+                Smart interview scheduling
               </p>
             </div>
           </SpotlightCard>
@@ -175,11 +197,11 @@ function SignedInContent() {
                   <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-2 text-start drop-shadow-sm">
+              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 text-start drop-shadow-sm">
                 Recordings
               </h3>
-              <p className="text-sm sm:text-base text-black dark:text-white/80 text-start font-normal">
-                Access past interviews
+              <p className="text-sm sm:text-base text-zinc-300 text-start font-normal">
+                Review & analyze sessions
               </p>
             </div>
           </SpotlightCard>
@@ -253,6 +275,9 @@ function SignedInContent() {
                 </p>
               </div>
             </SpotlightCard>
+
+            {/* Join by Code */}
+            <JoinByCodeCard />
 
             {/* Schedule */}
             <SpotlightCard
@@ -339,7 +364,7 @@ function SignedInContent() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-8"
           >
-            {interviews === undefined ? (
+            {loadingInterviews || interviews === null ? (
               <div className="flex justify-center py-12">
                 <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
               </div>
@@ -347,7 +372,7 @@ function SignedInContent() {
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {interviews.map((interview) => (
                   <div
-                    key={interview._id}
+                    key={interview.id}
                     className="h-full w-full cursor-pointer"
                   >
                     <MeetingCard interview={interview} />
@@ -387,66 +412,66 @@ export default function Home() {
                 <div className="absolute inset-0 bg-[linear-gradient(#1f1f1f_1px,transparent_1px),linear-gradient(90deg,#1f1f1f_1px,transparent_1px)] bg-[size:20px_20px]" />
             </div> */}
 
-      <section className="relative z-10 pt-5 pb-10 px-4 sm:px-6 lg:px-8">
+      <section className="relative z-10 pt-8 pb-10 px-4 sm:px-6 lg:px-8">
         <div className="">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative">
             {/* Left Content */}
             <motion.div
-              className="lg:col-span-7 space-y-6"
+              className="lg:col-span-7 space-y-8"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
             >
               <motion.h1
-                className="text-5xl md:text-5xl lg:text-6xl font-bold tracking-tight"
+                className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.5 }}
+                transition={{ delay: 0.2, duration: 0.6, ease: [0.25, 0.1, 0.25, 1.0] }}
               >
                 <motion.div
+                  className="text-white drop-shadow-lg"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.3, duration: 0.5 }}
+                  transition={{ delay: 0.3, duration: 0.6, ease: [0.25, 0.1, 0.25, 1.0] }}
                 >
                   Welcome to
                 </motion.div>
                 <motion.div
-                  className="text-blue-500"
+                  className="bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300 bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(99,102,241,0.8)]"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
+                  transition={{ delay: 0.5, duration: 0.6, ease: [0.25, 0.1, 0.25, 1.0] }}
                 >
-                  CodeScreen
+                  SkillSync
                 </motion.div>
                 <motion.div
-                  className="pt-2 text-2xl md:text-2xl lg:text-4xl"
+                  className="pt-2 text-3xl md:text-4xl lg:text-5xl text-white drop-shadow-lg"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.7, duration: 0.5 }}
+                  transition={{ delay: 0.7, duration: 0.6, ease: [0.25, 0.1, 0.25, 1.0] }}
                 >
                   Your all-in-one
                 </motion.div>
                 <motion.div
-                  className="pt-2 text-2xl md:text-2xl lg:text-4xl"
+                  className="pt-2 text-3xl md:text-4xl lg:text-5xl text-white drop-shadow-lg"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.9, duration: 0.5 }}
+                  transition={{ delay: 0.9, duration: 0.6, ease: [0.25, 0.1, 0.25, 1.0] }}
                 >
                   Technical Interview{" "}
-                  <span className="text-blue-500">Platform</span>
+                  <span className="bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent">Platform</span>
                 </motion.div>
               </motion.h1>
 
               <motion.p
-                className="text-base sm:text-lg text-zinc-700 dark:text-zinc-600 max-w-xl -z-10"
+                className="text-lg sm:text-xl text-zinc-200 max-w-xl drop-shadow-md leading-relaxed"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 1.1, duration: 0.5 }}
+                transition={{ delay: 1.1, duration: 0.6, ease: [0.25, 0.1, 0.25, 1.0] }}
               >
-                Conduct, record, and review coding interviews in real-time with
-                support for C++, Python, Java, and more. Schedule interviews,
-                assess candidates live, and streamline your tech hiring—all in
-                one place.
+                Streamline your technical hiring with real-time collaborative coding,
+                video interviews, and smart scheduling. Sync skills across your team
+                with multi-language support and instant feedback loops.
               </motion.p>
 
               {/* Stats */}
@@ -455,35 +480,35 @@ export default function Home() {
                 variants={fadeInUpVariants}
                 initial=""
                 animate={statsAnimation.controls}
-                className="flex flex-row items-center gap-4 xs:gap-6 sm:gap-8 text-xs sm:text-sm text-zinc-700 dark:text-zinc-600"
+                className="flex flex-row items-center gap-4 xs:gap-6 sm:gap-8 text-xs sm:text-sm text-zinc-400 dark:text-zinc-400"
               >
-                {/* Interviews Done */}
+                {/* Real-time Collaboration */}
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left min-w-[80px]">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-500">
-                    100+
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-400">
+                    <span className="animate-pulse">⚡</span>
                   </div>
                   <div className="uppercase text-[10px] sm:text-xs ">
-                    Interviews Done
+                    Real-time Sync
                   </div>
                 </div>
 
                 {/* Languages Supported */}
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left min-w-[80px]">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-500">
-                    4
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-400">
+                    10+
                   </div>
                   <div className="uppercase text-[10px] sm:text-xs ">
-                    Languages Supported
+                    Languages
                   </div>
                 </div>
 
-                {/* Session Recording */}
+                {/* HD Recording */}
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left min-w-[80px]">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-500">
-                    100%
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-400">
+                    HD
                   </div>
                   <div className="uppercase text-[10px] sm:text-xs ">
-                    Session Recording
+                    Recording
                   </div>
                 </div>
               </motion.div>
@@ -508,7 +533,7 @@ export default function Home() {
               )}
             </motion.div>
 
-            {/* Right Content (Image) — remains unchanged and hidden on small screens */}
+            {/* Right Content (3D Laptop) — hidden on small screens */}
             <motion.div
               className="absolute right-0 hidden lg:flex lg:col-span-5 justify-center items-center"
               initial={{ opacity: 0, x: 50 }}
@@ -516,25 +541,21 @@ export default function Home() {
               transition={{ duration: 0.7, delay: 0.3 }}
             >
               <motion.div
-                className="relative w-[550px] h-[550px] xl:w-[750px] xl:h-[750px]"
-                animate={{
-                  y: [0, -15, 0],
-                }}
+                className="relative w-[450px] h-[450px] xl:w-[600px] xl:h-[600px]"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
                 transition={{
-                  duration: 6,
-                  ease: "easeInOut",
-                  repeat: Infinity,
+                  duration: 1,
+                  delay: 0.5,
+                  ease: [0.25, 0.1, 0.25, 1.0]
                 }}
               >
-                <div className="relative overflow-hidden w-full h-full">
-                  <Image
-                    src="/hero.png"
-                    alt="CodeScreen Platform"
-                    className="w-full h-full object-contain object-center drop-shadow-2xl z-50"
-                    fill
-                    style={{
-                      filter: "drop-shadow(0 20px 13px rgb(0 0 0 / 0.25)) z-50",
-                    }}
+                <div className="relative overflow-visible w-full h-full">
+                  <Laptop3D
+                    size={1.2}
+                    rotationSpeed={0.3}
+                    floatSpeed={0.8}
+                    screenGlow={true}
                   />
                 </div>
               </motion.div>
@@ -556,10 +577,10 @@ export default function Home() {
             viewport={{ once: true, amount: 0.3 }}
             className="text-center py-12"
           >
-            <h2 className="text-2xl font-bold mb-4">Ready to get started?</h2>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
-              Sign in to access your dashboard, schedule interviews, and start
-              conducting technical assessments.
+            <h2 className="text-2xl font-bold mb-4 text-white">Ready to Sync Your Skills?</h2>
+            <p className="text-zinc-400 mb-6 max-w-md mx-auto">
+              Join SkillSync to schedule interviews, collaborate in real-time,
+              and elevate your technical hiring process.
             </p>
             <button
               onClick={() => signIn("google")}
