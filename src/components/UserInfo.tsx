@@ -1,8 +1,6 @@
 import { UserCircleIcon } from "lucide-react";
-import { Doc } from "../../convex/_generated/dataModel";
+import type { User } from '@/types';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-type User = Doc<"users">;
 
 function UserInfo({ user }: { user: User }) {
   return (
