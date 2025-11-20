@@ -8,7 +8,7 @@ export async function fetchAndSetJwt(): Promise<boolean> {
     if (!res.ok) return false;
     // The server sets an HttpOnly cookie; we can also return and inspect the JSON body if needed.
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

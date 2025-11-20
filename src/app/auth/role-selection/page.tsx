@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useMutation } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,7 +17,7 @@ import toast from "react-hot-toast";
 export default function RoleSelectionPage() {
   const { data: session, update, status } = useSession();
   const router = useRouter();
-  const updateUserRole = useMutation(api.users.updateUserRole);
+  
   const [selectedRole, setSelectedRole] = useState<
     "candidate" | "interviewer" | null
   >(null);
@@ -42,10 +40,8 @@ export default function RoleSelectionPage() {
 
     setIsLoading(true);
     try {
-      await updateUserRole({
-        email: session.user.email,
-        role,
-      });
+      // Update role via Prisma-backed API
+      await fetch('/api/db/users/role', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: session.user.email, role }) });
 
       // Update the session with the new role
       await update({
@@ -91,11 +87,11 @@ export default function RoleSelectionPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-slate-950 dark:to-slate-900">
+      <Card className="w-full max-w-md glass-gradient-border">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">
-            Welcome to CodeScreen!
+            Welcome to SkillSync!
           </CardTitle>
           <CardDescription>
             Please select your role to get started

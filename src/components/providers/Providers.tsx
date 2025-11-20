@@ -3,7 +3,8 @@
 import { SessionProvider, useSession } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
-import ConvexProviderWithAuth from "./ConvexProvider";
+import StreamProvider from './StreamProvider';
+import StreamVideoProvider from './StreamClientProvider';
 import { ThemeProvider } from "./ThemeProvider";
 import { Toaster } from "react-hot-toast";
 
@@ -32,17 +33,20 @@ function RoleRedirect({ children }: { children: React.ReactNode }) {
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <ConvexProviderWithAuth>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <RoleRedirect>{children}</RoleRedirect>
-          <Toaster />
-        </ThemeProvider>
-      </ConvexProviderWithAuth>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem={false}
+        forcedTheme="dark"
+        disableTransitionOnChange
+      >
+        <StreamProvider>
+          <StreamVideoProvider>
+            <RoleRedirect>{children}</RoleRedirect>
+            <Toaster />
+          </StreamVideoProvider>
+        </StreamProvider>
+      </ThemeProvider>
     </SessionProvider>
   );
 }

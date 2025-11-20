@@ -2,9 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useStreamVideoClient } from "@stream-io/video-react-sdk";
-import { useMutation, useQuery } from "convex/react";
-import { useState } from "react";
-import { api } from "../../../../convex/_generated/api";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import {
   Dialog,
@@ -23,8 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import UserInfo from "@/components/UserInfo";
-import { Loader2Icon, XIcon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import { TIME_SLOTS } from "@/constants";
 import MeetingCard from "@/components/MeetingCard";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -37,36 +34,44 @@ function InterviewScheduleUI() {
   const [open, setOpen] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
-  const interviews = useQuery(api.interviews.getAllInterviews) ?? [];
-  const users = useQuery(api.users.getUsers) ?? [];
-  const createInterview = useMutation(api.interviews.createInterview);
+  const [interviews, setInterviews] = useState<any[] | null>(null);
+  const [loadingLists, setLoadingLists] = useState(false);
 
-  const candidates = users?.filter((u) => u.role === "candidate");
-  const interviewers = users?.filter((u) => u.role === "interviewer");
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      setLoadingLists(true);
+      try {
+        const interviewsRes = await fetch('/api/interviews');
+        if (!cancelled) {
+          if (interviewsRes.ok) setInterviews(await interviewsRes.json()); else setInterviews([]);
+        }
+      } catch (err) {
+        console.error(err);
+        if (!cancelled) { setInterviews([]); }
+      } finally {
+        if (!cancelled) setLoadingLists(false);
+      }
+    };
+    load();
+    return () => { cancelled = true; };
+  }, []);
 
   const currentUserEmail = session?.user?.email;
 
+  // Simplified form data: participants chosen via code later
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     date: new Date(),
     time: "09:00",
-    candidateId: "",
-    interviewerIds: currentUserEmail ? [currentUserEmail] : [],
   });
 
   const scheduleMeeting = async () => {
     if (!client || !currentUserEmail) return;
-    if (!formData.candidateId || formData.interviewerIds.length === 0) {
-      toast.error("Please select both candidate and at least one interviewer");
-      return;
-    }
-
     setIsCreating(true);
-
     try {
-      const { title, description, date, time, candidateId, interviewerIds } =
-        formData;
+      const { title, description, date, time } = formData;
       const [hours, minutes] = time.split(":");
       const meetingDate = new Date(date);
       meetingDate.setHours(parseInt(hours), parseInt(minutes), 0);
@@ -77,34 +82,19 @@ function InterviewScheduleUI() {
       await call.getOrCreate({
         data: {
           starts_at: meetingDate.toISOString(),
-          custom: {
-            description: title,
-            additionalDetails: description,
-          },
+          custom: { description: title, additionalDetails: description },
         },
       });
 
-      await createInterview({
-        title,
-        description,
-        startTime: meetingDate.getTime(),
-        status: "upcoming",
-        streamCallId: id,
-        candidateId,
-        interviewerIds,
+      const res = await fetch('/api/interviews', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ title, description, startTime: meetingDate.getTime() })
       });
-
+      if (!res.ok) throw new Error('Failed to save interview');
       setOpen(false);
       toast.success("Meeting scheduled successfully!");
-
-      setFormData({
-        title: "",
-        description: "",
-        date: new Date(),
-        time: "09:00",
-        candidateId: "",
-        interviewerIds: currentUserEmail ? [currentUserEmail] : [],
-      });
+      setFormData({ title: "", description: "", date: new Date(), time: "09:00" });
     } catch (error) {
       console.error(error);
       toast.error("Failed to schedule meeting. Please try again.");
@@ -113,30 +103,7 @@ function InterviewScheduleUI() {
     }
   };
 
-  const addInterviewer = (interviewerId: string) => {
-    if (!formData.interviewerIds.includes(interviewerId)) {
-      setFormData((prev) => ({
-        ...prev,
-        interviewerIds: [...prev.interviewerIds, interviewerId],
-      }));
-    }
-  };
-
-  const removeInterviewer = (interviewerId: string) => {
-    if (interviewerId === currentUserEmail) return;
-    setFormData((prev) => ({
-      ...prev,
-      interviewerIds: prev.interviewerIds.filter((id) => id !== interviewerId),
-    }));
-  };
-
-  const selectedInterviewers = interviewers.filter((i) =>
-    formData.interviewerIds.includes(i.email)
-  );
-
-  const availableInterviewers = interviewers.filter(
-    (i) => !formData.interviewerIds.includes(i.email)
-  );
+  // Removed interviewer management; participants join via meeting code.
 
   return (
     <div className="container max-w-7xl mx-auto p-6 space-y-8">
@@ -192,70 +159,7 @@ function InterviewScheduleUI() {
                 />
               </div>
 
-              {/* CANDIDATE */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Candidate</label>
-                <Select
-                  value={formData.candidateId}
-                  onValueChange={(candidateId) =>
-                    setFormData({
-                      ...formData,
-                      candidateId,
-                    })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select candidate" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {candidates.map((candidate) => (
-                      <SelectItem key={candidate.email} value={candidate.email}>
-                        <UserInfo user={candidate} />
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* INTERVIEWERS */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Interviewers</label>
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {selectedInterviewers.map((interviewer) => (
-                    <div
-                      key={interviewer.email}
-                      className="inline-flex items-center gap-2 bg-secondary px-2 py-1 rounded-md text-sm"
-                    >
-                      <UserInfo user={interviewer} />
-                      {interviewer.email !== currentUserEmail && (
-                        <button
-                          onClick={() => removeInterviewer(interviewer.email)}
-                          className="hover:text-destructive transition-colors"
-                        >
-                          <XIcon className="h-4 w-4" />
-                        </button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-                {availableInterviewers.length > 0 && (
-                  <Select onValueChange={addInterviewer}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Add interviewer" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableInterviewers.map((interviewer) => (
-                        <SelectItem
-                          key={interviewer.email}
-                          value={interviewer.email}
-                        >
-                          <UserInfo user={interviewer} />
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              </div>
+              {/* Candidate & interviewer selection removed; joining handled via code. */}
 
               {/* DATE & TIME */}
               <div className="flex gap-4">
@@ -328,7 +232,7 @@ function InterviewScheduleUI() {
       </div>
 
       {/* LOADING STATE & MEETING CARDS */}
-      {!interviews ? (
+      {loadingLists || interviews === null ? (
         <div className="flex justify-center py-12">
           <Loader2Icon className="size-8 animate-spin text-muted-foreground" />
         </div>
@@ -336,7 +240,7 @@ function InterviewScheduleUI() {
         <div className="spacey-4">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {interviews.map((interview) => (
-              <MeetingCard key={interview._id} interview={interview} />
+              <MeetingCard key={interview.id} interview={interview} />
             ))}
           </div>
         </div>

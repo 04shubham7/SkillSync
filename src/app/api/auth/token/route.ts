@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     if (getToken) {
       token = await getToken({ req: req as any, secret: process.env.NEXTAUTH_SECRET });
     }
-  } catch (e) {
+  } catch {
     // If we cannot read the next-auth token via library, try reading session cookie as fallback
     token = null;
   }
@@ -43,7 +43,7 @@ export async function GET(req: Request) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
     });
-  } catch (e) {
+  } catch {
     // some older Next versions may not support res.cookies.set; ignore silently
   }
 

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Id } from "../../convex/_generated/dataModel";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { MessageSquareIcon, StarIcon } from "lucide-react";
 import {
@@ -27,25 +26,42 @@ function CommentDialog({ interviewId }: { interviewId: Id<"interviews"> }) {
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState("3");
 
-  const addComment = useMutation(api.comments.addComment);
-  const users = useQuery(api.users.getUsers);
-  const existingComments = useQuery(api.comments.getComments, { interviewId });
+  const [users, setUsers] = useState<any[] | undefined>(undefined);
+  const [existingComments, setExistingComments] = useState<any[] | undefined>(undefined);
+
+  useEffect(() => {
+    // fetch users
+    fetch('/api/db/users')
+      .then((r) => r.json())
+      .then((data) => setUsers(data))
+      .catch(() => setUsers([]));
+
+    // fetch comments for this interview
+    fetch(`/api/db/comments?interviewId=${interviewId}`)
+      .then((r) => r.json())
+      .then((data) => setExistingComments(data))
+      .catch(() => setExistingComments([]));
+  }, [interviewId]);
 
   const handleSubmit = async () => {
     if (!comment.trim()) return toast.error("Please enter comment");
 
     try {
-      await addComment({
-        interviewId,
-        content: comment.trim(),
-        rating: parseInt(rating),
+      const res = await fetch('/api/db/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ interviewId, content: comment.trim(), rating: parseInt(rating) }),
       });
+      if (!res.ok) throw new Error('Failed');
 
       toast.success("Comment submitted");
       setComment("");
       setRating("3");
       setIsOpen(false);
-    } catch{
+      // refresh comments
+      const refreshed = await fetch(`/api/db/comments?interviewId=${interviewId}`).then((r) => r.json());
+      setExistingComments(refreshed);
+    } catch {
       toast.error("Failed to submit comment");
     }
   };

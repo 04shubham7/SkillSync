@@ -3,34 +3,39 @@ import {
     useCall,
     VideoPreview,
 } from "@stream-io/video-react-sdk";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo, useCallback } from "react";
 import { Card } from "./ui/card";
 import { CameraIcon, MicIcon, SettingsIcon } from "lucide-react";
 import { Switch } from "./ui/switch";
 import { Button } from "./ui/button";
 
-function MeetingSetup({ onSetupComplete }: { onSetupComplete: () => void }) {
+const MeetingSetup = memo(({ onSetupComplete }: { onSetupComplete: () => void }) => {
     const [isCameraDisabled, setIsCameraDisabled] = useState(true);
     const [isMicDisabled, setIsMicDisabled] = useState(false);
 
     const call = useCall();
 
     useEffect(() => {
-        if (!call) return; // Ensure `call` is defined
-
-        if (isCameraDisabled) call.camera.disable();
-        else call.camera.enable();
-
-        if (isMicDisabled) call.microphone.disable();
-        else call.microphone.enable();
+        if (!call) return; // Avoid calling camera/mic if call undefined
+        if (isCameraDisabled) call.camera.disable(); else call.camera.enable();
+        if (isMicDisabled) call.microphone.disable(); else call.microphone.enable();
     }, [isCameraDisabled, isMicDisabled, call]);
 
-    if (!call) return null; // Move this after useEffect
-
-    const handleJoin = async () => {
+    const handleJoin = useCallback(async () => {
+        if (!call) return;
         await call.join();
         onSetupComplete();
-    };
+    }, [call, onSetupComplete]);
+
+    const toggleCamera = useCallback((checked: boolean) => {
+        setIsCameraDisabled(!checked);
+    }, []);
+
+    const toggleMic = useCallback((checked: boolean) => {
+        setIsMicDisabled(!checked);
+    }, []);
+
+    if (!call) return null;
 
     return (
         <div className="min-h-screen flex items-center justify-center p-6">
@@ -90,9 +95,7 @@ function MeetingSetup({ onSetupComplete }: { onSetupComplete: () => void }) {
                                         </div>
                                         <Switch
                                             checked={!isCameraDisabled}
-                                            onCheckedChange={(checked) =>
-                                                setIsCameraDisabled(!checked)
-                                            }
+                                            onCheckedChange={toggleCamera}
                                         />
                                     </div>
 
@@ -115,9 +118,7 @@ function MeetingSetup({ onSetupComplete }: { onSetupComplete: () => void }) {
                                         </div>
                                         <Switch
                                             checked={!isMicDisabled}
-                                            onCheckedChange={(checked) =>
-                                                setIsMicDisabled(!checked)
-                                            }
+                                            onCheckedChange={toggleMic}
                                         />
                                     </div>
 
@@ -161,5 +162,7 @@ function MeetingSetup({ onSetupComplete }: { onSetupComplete: () => void }) {
             </div>
         </div>
     );
-}
+});
+
+MeetingSetup.displayName = "MeetingSetup";
 export default MeetingSetup;

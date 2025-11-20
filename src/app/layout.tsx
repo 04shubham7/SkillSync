@@ -18,8 +18,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CodeScreen",
-  description: "Online Interview Platform",
+  title: "SkillSync",
+  description: "SkillSync – Real-time collaborative technical interviews",
 };
 
 export default function RootLayout({
@@ -28,19 +28,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-950 text-white`}
       >
         <Providers>
-          {/* Ultra-smooth background gradients */}
-          <div className="fixed inset-0 bg-blue-100/30 dark:bg-black/70 backdrop-blur-[100px] pointer-events-none" />
+          {/* Static gradient background */}
+          <div className="fixed inset-0 pointer-events-none z-0">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#1a0b2e] via-[#2d1b4e] to-[#0f0820]"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-violet-950/50 via-transparent to-purple-900/30"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-violet-600/20 via-transparent to-transparent"></div>
+          </div>
 
           <div className="min-h-screen relative z-10">
-            <div className="md:px-8 px-4">
+            <div className="px-4 md:px-8">
               <Navbar />
             </div>
-            <main className="">{children}</main>
+            <main className="px-4 md:px-8">{children}</main>
           </div>
           <Footer />
         </Providers>

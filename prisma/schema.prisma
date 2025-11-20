@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String   @unique
+    password  String?
+  image     String?
+  role      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Interview {
+  id             Int      @id @default(autoincrement())
+  title          String
+  description    String?
+  ownerId        Int
+  candidateId    String?
+  interviewerIds String[] @default([])
+  meetingCode    String?  @unique
+  streamCallId   String?
+  status         String   @default("scheduled")
+  startTime      BigInt?
+  endTime        BigInt?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([ownerId])
+  @@index([candidateId])
+}
+
+model Comment {
+  id           Int      @id @default(autoincrement())
+  interviewId  Int
+  interviewerId Int?
+  content      String
+  rating       Int
+  createdAt    DateTime @default(now())
+
+  @@index([interviewId])
+}

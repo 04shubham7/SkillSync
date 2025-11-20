@@ -22,7 +22,17 @@ import {
   LightbulbIcon,
   UsersIcon,
 } from "lucide-react";
-import Editor from "@monaco-editor/react";
+import dynamic from "next/dynamic";
+import { Loader2Icon } from "lucide-react";
+
+const Editor = dynamic(() => import("@monaco-editor/react"), {
+  loading: () => (
+    <div className="h-full flex items-center justify-center bg-[#1e1e1e]">
+      <Loader2Icon className="h-8 w-8 animate-spin text-white" />
+    </div>
+  ),
+  ssr: false,
+});
 import Image from "next/image";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -88,12 +98,8 @@ function CollaborativeCodeEditor() {
           console.log("Received room data:", data);
           setCode(data.code);
           setLanguage(data.language as any);
-          const question = CODING_QUESTIONS.find(
-            (q) => q.id === data.questionId
-          );
-          if (question) {
-            setSelectedQuestion(question);
-          }
+          const question = CODING_QUESTIONS.find((q) => q.id === data.questionId);
+          if (question) setSelectedQuestion(question);
           setClients(data.clients);
         });
 
@@ -189,14 +195,18 @@ function CollaborativeCodeEditor() {
     [selectedQuestion.starterCode, meetingId]
   );
 
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
   const handleCodeChange = useCallback(
     (value: string | undefined) => {
       const newCode = value || "";
       setCode(newCode);
-      socketRef.current?.emit("code-change", {
-        roomId: meetingId,
-        code: newCode,
-      });
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        socketRef.current?.emit("code-change", {
+          roomId: meetingId,
+          code: newCode,
+        });
+      }, 300);
     },
     [meetingId]
   );

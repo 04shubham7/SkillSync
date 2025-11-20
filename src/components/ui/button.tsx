@@ -5,20 +5,23 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium focus-ring-gradient transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[.97]",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          "relative bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 text-white shadow-md hover:brightness-110 hover:shadow-lg",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border border-input/60 bg-background/70 backdrop-blur-sm shadow-sm hover:bg-background/90 hover:border-blue-400/50 hover:text-foreground",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        glass: "glass-surface text-white hover:text-white",
+        subtle: "bg-blue-500/10 text-blue-300 hover:bg-blue-500/15 border border-blue-500/20",
+        gradient: "relative bg-gradient-to-r from-blue-500 via-cyan-500 to-teal-500 text-white shadow-sm hover:shadow-md hover:opacity-95",
       },
       size: {
         default: "h-9 px-4 py-2",
