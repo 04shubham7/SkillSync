@@ -3,20 +3,74 @@
 import LoaderUI from "@/components/LoaderUI";
 import MeetingRoom from "@/components/MeetingRoom";
 import MeetingSetup from "@/components/MeetingSetup";
-import useGetCallById from "@/hooks/useGetCallById";
 import { useSession } from "next-auth/react";
-import { StreamCall, StreamTheme } from "@stream-io/video-react-sdk";
-import { useParams } from "next/navigation";
-import { useState } from "react";
+import { StreamCall, StreamTheme, useStreamVideoClient } from "@stream-io/video-react-sdk";
+import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { LogIn } from "lucide-react";
 import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
 
 function MeetingPage() {
   const { id } = useParams();
+  const router = useRouter();
   const { status } = useSession();
-  const { call, isCallLoading } = useGetCallById(id);
-
+  const client = useStreamVideoClient();
+  const [call, setCall] = useState<any>(null);
+  const [isCallLoading, setIsCallLoading] = useState(true);
   const [isSetupComplete, setIsSetupComplete] = useState(false);
+
+  // Fetch interview and create/join Stream call
+  useEffect(() => {
+    if (status !== "authenticated" || !client || !id) return;
+
+    const setupCall = async () => {
+      try {
+        setIsCallLoading(true);
+        
+        // Fetch the interview to get or create a Stream call
+        const res = await fetch(`/api/interviews/${id}`);
+        if (!res.ok) {
+          toast.error("Interview not found");
+          router.push("/schedule");
+          return;
+        }
+
+        const interview = await res.json();
+        
+        // Use existing streamCallId or create a new one
+        const callId = interview.streamCallId || `meeting-${id}`;
+        const streamCall = client.call("default", callId);
+        
+        await streamCall.getOrCreate({
+          data: {
+            starts_at: interview.startTime ? new Date(interview.startTime).toISOString() : new Date().toISOString(),
+            custom: {
+              description: interview.title || "Interview Meeting",
+            },
+          },
+        });
+
+        // Update interview with streamCallId if it didn't have one
+        if (!interview.streamCallId) {
+          await fetch(`/api/interviews/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ streamCallId: callId }),
+          });
+        }
+
+        setCall(streamCall);
+      } catch (error) {
+        console.error("Error setting up call:", error);
+        toast.error("Failed to join meeting");
+      } finally {
+        setIsCallLoading(false);
+      }
+    };
+
+    setupCall();
+  }, [client, id, status, router]);
 
   if (status === "loading") {
     return <LoaderUI />;
