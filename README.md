@@ -1,293 +1,658 @@
-# CodeScreen
+# SkillSync - Real-time Collaborative Technical Interview Platform
 
-## Overview
+<div align="center">
 
-CodeScreen is an advanced online interview platform designed to streamline the technical interview process. Developed using **Next.js**, **TypeScript**, **Stream**, **Convex**, and **NextAuth.js with Google OAuth**, the platform facilitates seamless interview experiences with video calls, **real-time collaborative code editing**, and interview feedback capabilities. CodeScreen offers a dynamic environment for interviewers and interviewees, making technical assessments more effective and collaborative.
+![SkillSync Banner](https://img.shields.io/badge/SkillSync-Technical%20Interviews-blue?style=for-the-badge)
+[![Next.js](https://img.shields.io/badge/Next.js-14.2.23-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-4.15.0-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
+[![Stream](https://img.shields.io/badge/Stream-Video%20SDK-005FFF?style=flat-square)](https://getstream.io/)
 
-![Landing Page Preview](./public/landing-page-preview.png)
-![Interview Call Preview](./public/interview-call-preview.png)
+**A modern, full-stack platform for conducting collaborative technical interviews with real-time code editing, video calls, and smart scheduling.**
 
----
+[Features](#-features) • [Tech Stack](#-tech-stack) • [Getting Started](#-getting-started) • [Architecture](#-architecture) • [Demo](#-demo)
 
-## Problem/Why?
-
-Technical interviews can often be unstructured and challenging to manage, leading to inefficient assessments. CodeScreen addresses these issues by providing a unified platform for video calls, screen sharing, **real-time collaborative code editing**, and structured feedback, ensuring a seamless interview experience for both interviewers and candidates.
-
----
-
-## Background
-
-With the increasing demand for remote technical interviews, CodeScreen aims to replicate the efficiency of in-person assessments. Utilizing modern web technologies and frameworks, the platform facilitates real-time interaction, effective problem-solving, and structured evaluation with **multi-user collaborative coding sessions**.
+</div>
 
 ---
 
-## Core Features
+## 📋 Table of Contents
 
-### **Interview Experience:**
-
-- **Video Call Panel:** Real-time video calls with screen sharing and recording capabilities.
-- **Reactions & Feedback:** Emoji reactions for non-verbal communication.
-- **Screen Recording:** Capture interview sessions for future review.
-
-### **Problem Solving:**
-
-- **DSA Question Panel:** Display problems with detailed descriptions, constraints, and test cases.
-- **Real-time Collaborative Code Editor:** Multi-user code editing with live synchronization supporting C++, Java, and Python.
-- **Language Synchronization:** When one user changes the programming language, it syncs to all participants in real-time.
-- **Question Synchronization:** When one user changes the coding question, it syncs to all participants in real-time.
-- **User Presence:** See who is currently connected to the collaborative editing session.
-- **Connection Status:** Visual indicators showing real-time connection status to the collaborative server.
-- **Test Case Validation:** Validate code solutions against test cases provided by the interviewer.
-
-### **Collaborative Features:**
-
-- **Real-time Code Sync:** Multiple users can edit code simultaneously with live updates.
-- **Room-based Collaboration:** Each meeting room has its own isolated collaborative space.
-- **Automatic Reconnection:** Seamless reconnection if connection is lost.
-- **User Activity Indicators:** Visual feedback showing active participants.
-- **Cross-browser Compatibility:** Works across different browsers and devices.
-
-### **Interviewer Utilities:**
-
-- **Question Management:** Add, edit, and delete DSA questions with ease.
-- **Interview Scheduling:** Schedule, start, and manage interview sessions.
-- **Feedback System:** Provide structured feedback for each interview session.
-
-### **Authentication & Authorization:**
-
-- Secure authentication using **NextAuth.js with Google OAuth**.
-- Role-based access control for interviewers and candidates.
+- [Overview](#-overview)
+- [Key Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [System Architecture](#-architecture)
+- [Getting Started](#-getting-started)
+- [Environment Setup](#-environment-variables)
+- [Project Structure](#-project-structure)
+- [API Documentation](#-api-endpoints)
+- [Database Schema](#-database-schema)
+- [Contributing](#-contributing)
+- [License](#-license)
 
 ---
 
-## Technologies Used
+## 🌟 Overview
 
-- **Frontend:**
+**SkillSync** is a comprehensive technical interview platform designed to streamline the hiring process for software development roles. It combines real-time video communication, collaborative code editing, and intelligent scheduling to create a seamless interview experience for both interviewers and candidates.
 
-  - Next.js & TypeScript
-  - Tailwind CSS & ShadCn for styling
-  - Stream for real-time video communication
-  - Monaco Editor for code editing
-  - Socket.io for real-time collaborative features
+### Problem Statement
+Traditional technical interviews face challenges:
+- Lack of real-time collaboration tools
+- Poor code sharing mechanisms
+- Scheduling conflicts and coordination issues
+- No centralized platform for interview management
+- Limited recording and review capabilities
 
-- **Backend:**
-
-  - Convex for data management and state synchronization
-  - Server Components and Server Actions for optimized performance
-  - Express.js for collaborative server
-  - Socket.io server for real-time collaboration
-
-- **Authentication:**
-  - NextAuth.js with Google OAuth for user authentication and authorization
+### Solution
+SkillSync addresses these challenges by providing:
+- **Real-time Video Calls**: HD video/audio using Stream Video SDK
+- **Collaborative Code Editor**: Live code editing with Monaco Editor and Yjs CRDT
+- **Smart Scheduling**: Calendar-based interview scheduling with conflict detection
+- **Question Bank Management**: Customizable coding challenges (LeetCode-style problems)
+- **Recording & Playback**: Automatic interview recording and storage
+- **Role-Based Access**: Separate interfaces for interviewers and candidates
+- **Multi-Language Support**: JavaScript, Python, Java, and C++ code execution
 
 ---
 
-## Setup Instructions
+## ✨ Features
 
-### Prerequisites
+### 🎥 **Video Conferencing**
+- High-quality video/audio calls powered by Stream Video SDK
+- Screen sharing capabilities
+- Real-time participant management
+- Low-latency WebRTC connections
+- Recording and playback functionality
 
-- Node.js (v18 or higher)
-- npm or yarn
-- Google OAuth credentials
-- Stream Video API keys
-- Convex account
+### 💻 **Collaborative Code Editor**
+- **Monaco Editor** integration (VS Code's editor)
+- **Real-time synchronization** using Yjs CRDT
+- **Multi-language support**: JavaScript, Python, Java, C++
+- **Syntax highlighting** and intelligent code completion
+- **Problem selector dropdown** with predefined coding challenges
+- **Language switcher** with starter code templates
+- **Live cursor tracking** (see what your partner is typing)
 
-### Environment Variables:
+### 📅 **Smart Scheduling**
+- Interactive calendar interface
+- Time slot selection with availability checking
+- Automated email notifications (planned)
+- Interview status management (Upcoming, Completed, Succeeded, Failed)
+- Candidate information tracking
 
-Create a `.env.local` file in the root directory with the following variables:
+### 🎯 **Interview Management Dashboard**
+- **For Interviewers**:
+  - View all scheduled interviews
+  - Access interview recordings
+  - Manage candidate evaluations (Pass/Fail)
+  - Add/Edit/Delete coding questions
+  - View candidate details and comments
+  
+- **For Candidates**:
+  - View upcoming interviews
+  - Join meetings via invitation link
+  - Access past interview recordings
+
+### 🔐 **Authentication & Authorization**
+- Google OAuth integration via NextAuth.js
+- Role-based access control (Interviewer/Candidate)
+- Secure session management
+- JWT-based API authentication
+
+### 💬 **Real-time Chat**
+- In-meeting text chat using Stream Chat SDK
+- Message history persistence
+- File sharing capabilities (planned)
+
+### 📊 **Analytics & Reporting**
+- Interview statistics
+- Candidate performance tracking
+- Question difficulty metrics
+- Success rate analytics
+
+---
+
+## 🛠 Tech Stack
+
+### **Frontend**
+| Technology | Purpose | Why Chosen |
+|------------|---------|------------|
+| **Next.js 14.2.23** | React Framework | Server-side rendering, API routes, optimized performance, App Router |
+| **TypeScript** | Type Safety | Catch errors early, better IDE support, improved maintainability |
+| **Tailwind CSS** | Styling | Utility-first CSS, rapid development, consistent design system |
+| **Framer Motion** | Animations | Smooth, performant animations for enhanced UX |
+| **shadcn/ui** | Component Library | Accessible, customizable React components |
+| **Lucide React** | Icons | Modern, tree-shakeable icon library |
+
+### **Backend**
+| Technology | Purpose | Why Chosen |
+|------------|---------|------------|
+| **Next.js API Routes** | Backend API | Serverless functions, same codebase as frontend, type-safe |
+| **Prisma ORM** | Database ORM | Type-safe database queries, automatic migrations, excellent DX |
+| **PostgreSQL** | Database | Relational data, ACID compliance, robust querying capabilities |
+| **NextAuth.js** | Authentication | OAuth providers, session management, secure and flexible |
+| **Express.js** | WebSocket Server | Collaborative editing server for Yjs synchronization |
+
+### **Real-time Communication**
+| Technology | Purpose | Why Chosen |
+|------------|---------|------------|
+| **Stream Video SDK** | Video Calls | Enterprise-grade, low-latency, built-in recording |
+| **Stream Chat SDK** | In-app Messaging | Real-time chat, message persistence, typing indicators |
+| **Socket.io** | WebSocket | Bidirectional event-based communication |
+| **Yjs** | CRDT Library | Conflict-free replicated data for collaborative editing |
+| **y-websocket** | Yjs Transport | WebSocket provider for Yjs document synchronization |
+
+### **Code Editor**
+| Technology | Purpose | Why Chosen |
+|------------|---------|------------|
+| **Monaco Editor** | Code Editor | VS Code's editor, syntax highlighting, IntelliSense |
+| **y-monaco** | Monaco + Yjs Binding | Connect Monaco Editor with Yjs for real-time collaboration |
+
+### **DevOps & Deployment**
+| Technology | Purpose |
+|------------|---------|
+| **Vercel** | Frontend Hosting (recommended) |
+| **Railway/Heroku** | Collaborative server hosting |
+| **PostgreSQL Cloud** | Database hosting (Supabase/Neon) |
+
+---
+
+## 🏗 Architecture
+
+### **System Architecture Diagram**
+
+```mermaid
+graph TD
+    Client[Client Browser]
+    
+    subgraph Frontend
+        NextJS[Next.js App]
+        Monaco[Monaco Editor]
+        StreamSDK[Stream SDK]
+    end
+    
+    subgraph Backend
+        NextAPI[Next.js API Routes]
+        Auth[NextAuth.js]
+        CollabServer[Express Collab Server]
+    end
+    
+    subgraph Database
+        Postgres[(PostgreSQL)]
+        Prisma[Prisma ORM]
+    end
+    
+    subgraph ExternalServices
+        Google[Google OAuth]
+        StreamAPI[Stream API Cloud]
+    end
+    
+    Client --> NextJS
+    NextJS --> NextAPI
+    NextJS --> StreamSDK
+    NextJS --> Monaco
+    
+    Monaco -- WebSocket --> CollabServer
+    StreamSDK -- WebRTC --> StreamAPI
+    
+    NextAPI --> Prisma
+    Prisma --> Postgres
+    
+    Auth --> Google
+    NextAPI --> Auth
+```
+
+### **Data Flow**
+
+#### **1. User Authentication Flow**
+```
+User → Google OAuth → NextAuth → Database → Session Creation → Dashboard
+```
+
+#### **2. Interview Scheduling Flow**
+```
+Interviewer → Select Date/Time → Create Interview → 
+Save to Database → Generate Meeting Link → Send to Candidate
+```
+
+#### **3. Real-time Collaboration Flow**
+```
+User Types in Editor → Yjs CRDT → WebSocket → Express Server →
+Sync to All Clients → Update Monaco Editor
+```
+
+#### **4. Video Call Flow**
+```
+User Joins Meeting → Stream SDK → WebRTC Connection →
+Establish P2P/TURN → Video/Audio Streaming → Recording
+```
+
+---
+
+## 🚀 Getting Started
+
+### **Prerequisites**
+
+- **Node.js** 18.x or higher
+- **PostgreSQL** 14.x or higher
+- **npm** or **yarn** or **pnpm**
+- **Git**
+
+### **Installation**
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/04shubham7/SkillSync.git
+cd SkillSync
+```
+
+2. **Install dependencies**
+```bash
+npm install
+```
+
+3. **Set up PostgreSQL database**
+```bash
+# Create a new PostgreSQL database
+createdb skillsync_db
+
+# Or using psql
+psql -U postgres
+CREATE DATABASE skillsync_db;
+```
+
+4. **Configure environment variables**
+```bash
+cp .env.example .env.local
+```
+Edit `.env.local` with your credentials (see [Environment Variables](#-environment-variables) section)
+
+5. **Run database migrations**
+```bash
+npx prisma migrate dev
+npx prisma generate
+```
+
+6. **Seed the database** (Optional)
+```bash
+npm run seed:more
+```
+
+7. **Start the development servers**
+
+**Terminal 1 - Next.js App:**
+```bash
+npm run dev
+```
+
+**Terminal 2 - Collaborative Server:**
+```bash
+npm run collaborative-server:dev
+```
+
+8. **Open your browser**
+```
+http://localhost:3000
+```
+
+---
+
+## 🔑 Environment Variables
+
+Create a `.env.local` file in the root directory:
 
 ```env
-# Authentication
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-nextauth-secret-key
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/skillsync_db"
 
-# Convex
-CONVEX_DEPLOYMENT=your-convex-deployment
-NEXT_PUBLIC_CONVEX_URL=your-convex-url
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key-here" # Generate: openssl rand -base64 32
 
-# Stream Video API
-NEXT_PUBLIC_STREAM_API_KEY=your-stream-api-key
-STREAM_SECRET_KEY=your-stream-secret-key
+# Google OAuth
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
-# Collaborative Server (for production deployment)
-NEXT_PUBLIC_COLLABORATIVE_SERVER_URL=https://your-collaborative-server-domain.com
+# Stream Video & Chat
+NEXT_PUBLIC_STREAM_API_KEY="your-stream-api-key"
+STREAM_API_SECRET="your-stream-secret-key"
+
+# Collaborative Server
+COLLABORATIVE_SERVER_URL="http://localhost:3002"
+
+# Optional: For production
+NODE_ENV="development"
 ```
 
-### Installation & Running
+### **Getting API Keys**
 
-1. **Install dependencies:**
+#### **Google OAuth**
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project
+3. Enable Google+ API
+4. Create OAuth 2.0 credentials
+5. Add authorized redirect URI: `http://localhost:3000/api/auth/callback/google`
 
-   ```bash
-   npm install
-   ```
+#### **Stream API**
+1. Sign up at [GetStream.io](https://getstream.io/)
+2. Create a new app
+3. Get your API key and secret from the dashboard
+4. Enable Video and Chat features
 
-2. **Start the collaborative server** (in a separate terminal):
+---
 
-   ```bash
-   npm run collaborative-server
-   ```
+## 📁 Project Structure
 
-   This starts the collaborative server on port 5001.
+```
+SkillSync/
+├── src/
+│   ├── app/                      # Next.js App Router
+│   │   ├── (admin)/             # Admin routes (Interviewer)
+│   │   │   └── dashboard/       # Interview management dashboard
+│   │   ├── (root)/              # Public routes
+│   │   │   ├── (home)/          # Landing page
+│   │   │   ├── meeting/[id]/    # Video call room
+│   │   │   ├── schedule/        # Interview scheduling
+│   │   │   └── recordings/      # Past interviews
+│   │   ├── auth/                # Authentication pages
+│   │   │   ├── signin/          # Sign in page
+│   │   │   └── role-selection/  # Role selection after OAuth
+│   │   ├── api/                 # API Routes
+│   │   │   ├── auth/            # NextAuth endpoints
+│   │   │   ├── interviews/      # Interview CRUD
+│   │   │   ├── stream/          # Stream SDK tokens
+│   │   │   └── users/           # User management
+│   │   ├── globals.css          # Global styles
+│   │   └── layout.tsx           # Root layout
+│   ├── components/              # React components
+│   │   ├── ui/                  # shadcn/ui components
+│   │   ├── motion/              # Framer Motion wrappers
+│   │   ├── providers/           # Context providers
+│   │   ├── CodeEditor.tsx       # Monaco Editor wrapper
+│   │   ├── MeetingRoom.tsx      # Video call interface
+│   │   ├── Navbar.tsx           # Navigation bar
+│   │   └── ...                  # Other components
+│   ├── constants/               # Constants and configs
+│   │   └── index.ts             # Coding questions, actions, etc.
+│   ├── hooks/                   # Custom React hooks
+│   │   ├── useGetCallById.ts    # Fetch call details
+│   │   ├── useGetCalls.ts       # Fetch user calls
+│   │   └── useUserRole.ts       # Get user role
+│   ├── lib/                     # Utility functions
+│   │   └── utils.ts             # Helper functions
+│   └── types/                   # TypeScript types
+│       ├── index.ts             # Global types
+│       └── next-auth.d.ts       # NextAuth type extensions
+├── prisma/
+│   ├── schema.prisma            # Database schema
+│   └── migrations/              # Database migrations
+├── public/                      # Static assets
+│   ├── javascript.png           # Language icons
+│   ├── python.png
+│   └── ...
+├── scripts/                     # Utility scripts
+│   └── seed-more.ts             # Database seeding
+├── collaborative-server.js      # Express + Yjs server
+├── package.json                 # Dependencies
+├── tsconfig.json                # TypeScript config
+├── tailwind.config.ts           # Tailwind config
+├── next.config.mjs              # Next.js config
+└── README.md                    # This file
+```
 
-3. **Start the Next.js development server** (in another terminal):
+---
 
-   ```bash
-   npm run dev
-   ```
+## 🔌 API Endpoints
 
-   This starts the application on `http://localhost:3000`.
+### **Authentication**
+- `GET /api/auth/session` - Get current session
+- `POST /api/auth/signin` - Sign in with provider
+- `POST /api/auth/signout` - Sign out
+- `POST /api/auth/register` - Register new user
 
-4. **Access the application:**
-   - Open `http://localhost:3000` in your browser
-   - Sign in with Google OAuth
-   - Create or join a meeting room
+### **Interviews**
+- `GET /api/interviews` - List all interviews
+- `POST /api/interviews` - Create new interview
+- `GET /api/interviews/[id]` - Get interview by ID
+- `PATCH /api/interviews/[id]` - Update interview status
+- `POST /api/interviews/join` - Join interview by code
 
-### Getting Stream API Keys
+### **Stream Integration**
+- `POST /api/stream/token` - Generate Stream Chat token
+- `POST /api/stream/video/token` - Generate Stream Video token
+- `POST /api/stream/channels/upsert` - Create/update chat channel
 
-1. Go to [Stream Dashboard](https://dashboard.getstream.io/)
-2. Create a new app or use an existing one
-3. Go to the "API Keys" section
-4. Copy your **API Key** and **Secret Key**
-5. Add them to your `.env.local` file
+### **Users**
+- `GET /api/users` - List all users
+- `PATCH /api/users/role` - Update user role
 
-### Deploying the Collaborative Server
+### **Comments**
+- `GET /api/db/comments?interviewId=X` - Get interview comments
+- `POST /api/db/comments` - Add comment to interview
 
-For production deployment, you need to deploy the collaborative server separately:
+---
 
-1. **Deploy the collaborative server** to a hosting service (e.g., Railway, Render, Heroku, or your own server)
-2. **Set the environment variable** `NEXT_PUBLIC_COLLABORATIVE_SERVER_URL` to your deployed server URL
-3. **Configure CORS** in the collaborative server to allow your domain
+## 💾 Database Schema
 
-Example deployment on Railway:
+```prisma
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  emailVerified DateTime?
+  image         String?
+  role          String       @default("candidate") // "interviewer" | "candidate"
+  accounts      Account[]
+  sessions      Session[]
+  interviews    Interview[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Interview {
+  id              Int       @id @default(autoincrement())
+  title           String
+  startTime       BigInt
+  callId          String    @unique // Stream call ID
+  channelId       String?   @unique // Stream chat channel ID
+  candidateId     String?
+  interviewerId   String
+  status          String    @default("upcoming") // "upcoming" | "completed" | "succeeded" | "failed"
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  user            User      @relation(fields: [interviewerId], references: [id])
+  comments        Comment[]
+}
+
+model Comment {
+  id           Int       @id @default(autoincrement())
+  content      String
+  userId       String
+  userName     String?
+  userImage    String?
+  interviewId  Int
+  createdAt    DateTime  @default(now())
+  interview    Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+```
+
+### **ER Diagram**
+
+```mermaid
+erDiagram
+    User ||--o{ Account : has
+    User ||--o{ Session : has
+    User ||--o{ Interview : organizes
+    User ||--o{ Comment : writes
+    Interview ||--o{ Comment : contains
+    
+    User {
+        string id PK
+        string name
+        string email
+        string role
+    }
+    
+    Interview {
+        int id PK
+        string title
+        bigint startTime
+        string callId
+        string status
+    }
+    
+    Comment {
+        int id PK
+        string content
+        datetime createdAt
+    }
+```
+
+---
+
+## 🎨 UI/UX Features
+
+### **Design System**
+- **Dark Theme**: Optimized for reduced eye strain during long interviews
+- **Glassmorphism**: Modern frosted-glass effect on cards and panels
+- **Gradient Accents**: Blue-to-purple gradients for emphasis
+- **Smooth Animations**: Framer Motion powered transitions
+- **Responsive Design**: Mobile-first approach, works on all devices
+
+### **Key Screens**
+1. **Landing Page**: Feature showcase, quick actions (New Call, Join Interview, Schedule, Recordings)
+2. **Dashboard**: Interview management, question bank, candidate tracking
+3. **Meeting Room**: Split-screen with video (left) and code editor (right)
+4. **Schedule**: Calendar-based date/time picker
+5. **Recordings**: Grid of past interview recordings
+
+---
+
+## 🧪 Testing
 
 ```bash
-# Deploy collaborative-server.js to Railway
-railway up collaborative-server.js
+# Run tests (when implemented)
+npm test
+
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
 ```
 
-Example deployment on Render:
+---
 
-- Create a new Web Service
-- Set the build command: `npm install`
-- Set the start command: `node collaborative-server.js`
-- Add environment variables as needed
+## 🚀 Deployment
+
+### **Vercel (Recommended for Next.js)**
+
+1. Push code to GitHub
+2. Import project in Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy!
+
+### **Database (Production)**
+
+Use managed PostgreSQL services:
+- **Supabase** (Recommended, free tier available)
+- **Neon** (Serverless PostgreSQL)
+- **Railway** (Full-stack hosting)
+
+### **Collaborative Server**
+
+Deploy Express server separately:
+- **Railway**
+- **Heroku**
+- **Render**
+
+Update `COLLABORATIVE_SERVER_URL` in environment variables.
 
 ---
 
-## How to Use
+## 📝 Future Enhancements
 
-### Creating a Meeting
-
-1. Sign in to CodeScreen
-2. Navigate to the schedule page
-3. Create a new meeting
-4. Share the meeting URL with participants
-
-### Joining a Meeting
-
-1. Click on the meeting URL shared by the organizer
-2. The collaborative code editor will automatically connect to the room
-3. You'll see real-time sync indicators and user presence
-
-### Collaborative Features
-
-- **Code Editing:** Any changes you make to the code will be visible to all other participants in real-time
-- **Language Selection:** When you change the programming language, it will sync to all participants
-- **Question Selection:** When you change the coding question, it will sync to all participants
-- **User Presence:** See who is currently connected to the collaborative session
-- **Connection Status:** Green/red indicators show your connection status to the collaborative server
+- [ ] **AI Code Analysis**: Automated candidate code review with suggestions
+- [ ] **Whiteboard**: Integrated drawing canvas for system design discussions
+- [ ] **Email Notifications**: Automated interview reminders and status updates
+- [ ] **Advanced Analytics**: Detailed interviewer/candidate performance metrics
+- [ ] **Mobile App**: React Native mobile application
+- [ ] **Screen Recording**: Separate screen recording alongside video
+- [ ] **Code Execution**: Backend API for running and testing code
+- [ ] **Multi-language Support**: Internationalization (i18n)
+- [ ] **Interview Templates**: Pre-configured question sets by role/level
+- [ ] **Feedback Forms**: Structured post-interview evaluation forms
 
 ---
 
-## Architecture
+## 🤝 Contributing
 
-### Collaborative Server
+Contributions are welcome! Please follow these steps:
 
-The collaborative server handles:
-
-- WebSocket connections for real-time communication
-- Room management (users joining/leaving)
-- Code, language, and question synchronization
-- User presence tracking
-- Automatic cleanup when rooms are empty
-
-### Client Architecture
-
-The collaborative editor:
-
-- Connects to the collaborative server via WebSocket
-- Syncs code changes, language changes, and question changes
-- Shows user presence and connection status
-- Handles automatic reconnection
-- Provides real-time feedback
-
-### Room Management
-
-- Each meeting room is identified by the meeting ID from the URL
-- Users automatically join the room when they visit the meeting page
-- Room data persists as long as at least one user is connected
-- When all users leave, the room data is cleared
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-## Troubleshooting
+## 📄 License
 
-### Connection Issues
-
-1. **Collaborative server not connecting:**
-
-   - Make sure the collaborative server is running: `npm run collaborative-server`
-   - Check that port 5001 is not blocked by firewall
-   - Verify the server URL in the client code
-
-2. **Video call not connecting:**
-   - Check that Stream API keys are correctly configured
-   - Verify you're using Video API keys (not Chat API keys)
-   - Check browser console for error messages
-
-### Sync Issues
-
-1. **Code not syncing:**
-
-   - Check browser console for error messages
-   - Verify all users are connected to the same room
-   - Try refreshing the page if sync stops working
-
-2. **Language/Question not syncing:**
-   - Ensure all participants are connected to the collaborative server
-   - Check connection status indicators
-
-### Performance Issues
-
-- The collaborative server is designed for small to medium-sized rooms
-- For large rooms, consider implementing additional optimizations
-- Monitor server resources if you have many concurrent users
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## Security Considerations
+## 👨‍💻 Author
 
-- The current implementation is for development/demo purposes
-- For production use, consider adding:
-  - Authentication for room access
-  - Rate limiting for socket events
-  - Input validation and sanitization
-  - HTTPS for secure WebSocket connections
-  - Environment-specific configurations
+**Shubham**
+- GitHub: [@04shubham7](https://github.com/04shubham7)
+- Email: shubham@example.com
 
 ---
 
-## Future Enhancements
+## 🙏 Acknowledgments
 
-- Integration with third-party coding platforms (e.g., Codeforces, LeetCode)
-- Advanced analytics for interview feedback
-- Support for additional programming languages
-- Enhanced collaborative features (cursor tracking, selection sync)
-- Recording collaborative sessions
-- Advanced user permissions and roles
+- **Next.js** team for an amazing React framework
+- **Vercel** for excellent hosting and developer experience
+- **Prisma** for intuitive database tooling
+- **Stream** for powerful video and chat SDKs
+- **Monaco Editor** team for VS Code's editor core
+- **Yjs** community for CRDT implementation
+- **shadcn/ui** for beautiful component library
 
 ---
 
-CodeScreen redefines technical interviews by combining modern technologies to create a structured, interactive, and effective assessment environment with real-time collaborative capabilities that make remote interviews as effective as in-person sessions.
+<div align="center">
+
+**Built with ❤️ using Next.js, TypeScript, and modern web technologies**
+
+⭐ Star this repository if you found it helpful!
+
+</div>
