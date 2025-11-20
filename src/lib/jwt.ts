@@ -19,7 +19,7 @@ export function verifyToken(token?: string): TokenPayload | null {
   try {
     const decoded = jwt.verify(token, SECRET) as TokenPayload;
     return decoded;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
