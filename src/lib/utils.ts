@@ -1,7 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Doc } from "../../convex/_generated/dataModel";
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -15,8 +13,7 @@ export const sanitizeUserId = (email: string): string => {
     .replace(/@/g, "_at_"); // Replace @ with _at_
 };
 
-type Interview = Doc<"interviews">;
-type User = Doc<"users">;
+import type { Interview, User } from '@/types';
 
 export const groupInterviews = (interviews: Interview[]) => {
   const now = Date.now();
