@@ -7,15 +7,14 @@ import {
   WebGLRenderer,
   BoxGeometry,
   MeshStandardMaterial,
-  Mesh,
-  DirectionalLight,
-  AmbientLight,
   Group,
   PlaneGeometry,
   DoubleSide,
   PointLight,
   MeshPhysicalMaterial,
-  Color
+  AmbientLight,
+  DirectionalLight,
+  Mesh
 } from 'three';
 
 import './Laptop3D.css';
@@ -36,29 +35,30 @@ export default function Laptop3D({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     const scene = new Scene();
-    
+
     const camera = new PerspectiveCamera(
       45,
-      containerRef.current.clientWidth / containerRef.current.clientHeight,
+      container.clientWidth / container.clientHeight,
       0.1,
       1000
     );
     camera.position.set(0, 2, 5);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new WebGLRenderer({ 
-      antialias: true, 
+    const renderer = new WebGLRenderer({
+      antialias: true,
       alpha: true,
       powerPreference: "high-performance"
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
+    renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
-    containerRef.current.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
     // Lighting
     const ambientLight = new AmbientLight(0xffffff, 0.6);
@@ -162,7 +162,7 @@ export default function Laptop3D({
     const codeLine3 = createCodeLine(1.0, -0.5, 0);
     const codeLine4 = createCodeLine(1.6, -0.2, -0.15);
     const codeLine5 = createCodeLine(1.2, -0.4, -0.3);
-    
+
     laptopGroup.add(codeLine1, codeLine2, codeLine3, codeLine4, codeLine5);
 
     // Trackpad
@@ -191,8 +191,8 @@ export default function Laptop3D({
     let mouseX = 0;
     let mouseY = 0;
     const handleMouseMove = (event: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
       mouseX = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       mouseY = -((event.clientY - rect.top) / rect.height) * 2 + 1;
     };
@@ -212,7 +212,7 @@ export default function Laptop3D({
       // Mouse interaction - subtle tilt
       const targetRotationX = mouseY * 0.1;
       const targetRotationY = Math.PI * 0.15 + mouseX * 0.2;
-      
+
       laptopGroup.rotation.x += (targetRotationX - laptopGroup.rotation.x) * 0.05;
       laptopGroup.rotation.y += (targetRotationY - laptopGroup.rotation.y) * 0.05;
 
@@ -228,24 +228,24 @@ export default function Laptop3D({
 
     // Handle resize
     const handleResize = () => {
-      if (!containerRef.current) return;
-      const width = containerRef.current.clientWidth;
-      const height = containerRef.current.clientHeight;
-      
+      if (!container) return;
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
     };
 
     const resizeObserver = new ResizeObserver(handleResize);
-    resizeObserver.observe(containerRef.current);
+    resizeObserver.observe(container);
 
     // Cleanup
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(animationId);
       resizeObserver.disconnect();
-      
+
       renderer.dispose();
       baseGeometry.dispose();
       baseMaterial.dispose();
@@ -257,9 +257,9 @@ export default function Laptop3D({
       screenMaterial.dispose();
       trackpadGeometry.dispose();
       trackpadMaterial.dispose();
-      
-      if (containerRef.current) {
-        containerRef.current.removeChild(renderer.domElement);
+
+      if (container) {
+        container.removeChild(renderer.domElement);
       }
     };
   }, [size, rotationSpeed, floatSpeed, screenGlow]);

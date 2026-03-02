@@ -107,10 +107,10 @@ function SignedInContent() {
                   <Code2 className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 text-start drop-shadow-sm">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-2 text-start drop-shadow-md tracking-tight">
                 New Call
               </h3>
-              <p className="text-sm sm:text-base text-zinc-300 text-start font-normal">
+              <p className="text-sm sm:text-base text-zinc-300 text-start font-medium opacity-90">
                 Launch instant interview session
               </p>
             </div>
@@ -136,10 +136,10 @@ function SignedInContent() {
                   <Users className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 text-start drop-shadow-sm">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-2 text-start drop-shadow-md tracking-tight">
                 Join Interview
               </h3>
-              <p className="text-sm sm:text-base text-zinc-300 text-start font-normal">
+              <p className="text-sm sm:text-base text-zinc-300 text-start font-medium opacity-90">
                 Connect with your invite link
               </p>
             </div>
@@ -168,10 +168,10 @@ function SignedInContent() {
                   <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 text-start drop-shadow-sm">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-2 text-start drop-shadow-md tracking-tight">
                 Schedule
               </h3>
-              <p className="text-sm sm:text-base text-zinc-300 text-start font-normal">
+              <p className="text-sm sm:text-base text-zinc-300 text-start font-medium opacity-90">
                 Smart interview scheduling
               </p>
             </div>
@@ -197,10 +197,10 @@ function SignedInContent() {
                   <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 text-start drop-shadow-sm">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white mb-2 text-start drop-shadow-md tracking-tight">
                 Recordings
               </h3>
-              <p className="text-sm sm:text-base text-zinc-300 text-start font-normal">
+              <p className="text-sm sm:text-base text-zinc-300 text-start font-medium opacity-90">
                 Review & analyze sessions
               </p>
             </div>
@@ -238,10 +238,10 @@ function SignedInContent() {
                     <Code2 className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                   </div>
                 </div>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-2 text-start drop-shadow-sm">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-black dark:text-white mb-2 text-start drop-shadow-md tracking-tight">
                   New Call
                 </h3>
-                <p className="text-sm sm:text-base text-black dark:text-white/80 text-start font-normal">
+                <p className="text-sm sm:text-base text-black/80 dark:text-white/90 text-start font-medium">
                   Start an instant call
                 </p>
               </div>
@@ -267,10 +267,10 @@ function SignedInContent() {
                     <Users className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                   </div>
                 </div>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-2 text-start drop-shadow-sm">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-black dark:text-white mb-2 text-start drop-shadow-md tracking-tight">
                   Join Interview
                 </h3>
-                <p className="text-sm sm:text-base text-black dark:text-white/80 text-start font-normal">
+                <p className="text-sm sm:text-base text-black/80 dark:text-white/90 text-start font-medium">
                   Enter via invitation link
                 </p>
               </div>
@@ -299,10 +299,10 @@ function SignedInContent() {
                     <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                   </div>
                 </div>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-2 text-start drop-shadow-sm">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-black dark:text-white mb-2 text-start drop-shadow-md tracking-tight">
                   Schedule
                 </h3>
-                <p className="text-sm sm:text-base text-black dark:text-white/80 text-start font-normal">
+                <p className="text-sm sm:text-base text-black/80 dark:text-white/90 text-start font-medium">
                   Plan upcoming interviews
                 </p>
               </div>
@@ -328,10 +328,10 @@ function SignedInContent() {
                     <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-white drop-shadow-lg" />
                   </div>
                 </div>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-black dark:text-white mb-2 text-start drop-shadow-sm">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-black dark:text-white mb-2 text-start drop-shadow-md tracking-tight">
                   Recordings
                 </h3>
-                <p className="text-sm sm:text-base text-black dark:text-white/80 text-start font-normal">
+                <p className="text-sm sm:text-base text-black/80 dark:text-white/90 text-start font-medium">
                   Access past interviews
                 </p>
               </div>
@@ -437,7 +437,7 @@ export default function Home() {
                   Welcome to
                 </motion.div>
                 <motion.div
-                  className="bg-gradient-to-r from-blue-300 via-indigo-300 to-purple-300 bg-clip-text text-transparent drop-shadow-[0_4px_20px_rgba(99,102,241,0.8)]"
+                  className="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 bg-clip-text text-transparent drop-shadow-[0_4px_24px_rgba(99,102,241,0.9)]"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.5, duration: 0.6, ease: [0.25, 0.1, 0.25, 1.0] }}
@@ -459,7 +459,7 @@ export default function Home() {
                   transition={{ delay: 0.9, duration: 0.6, ease: [0.25, 0.1, 0.25, 1.0] }}
                 >
                   Technical Interview{" "}
-                  <span className="bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent">Platform</span>
+                  <span className="bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">Platform</span>
                 </motion.div>
               </motion.h1>
 
