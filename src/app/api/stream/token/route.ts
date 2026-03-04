@@ -5,7 +5,7 @@ import authOptions from '@/lib/nextAuthOptions';
 import prisma from '@/lib/prisma';
 
 export async function GET() {
-  const session = await getServerSession(authOptions as any);
+  const session: any = await getServerSession(authOptions as any);
   if (!session?.user?.email) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
   }

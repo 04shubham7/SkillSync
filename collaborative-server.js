@@ -141,8 +141,16 @@ io.on("connection", (socket) => {
 
         // Update room data
         if (roomData[roomId]) {
-          const clients = getAllConnectedClients(roomId);
-          roomData[roomId].clients = clients;
+          // Manually filter out the disconnecting user, since they are still in socket.rooms
+          roomData[roomId].clients = roomData[roomId].clients.filter(
+            (client) => client.socketId !== socket.id
+          );
+
+          // Antigravity optimization: Clean up empty rooms to prevent memory leaks
+          if (roomData[roomId].clients.length === 0) {
+            delete roomData[roomId];
+            console.log(`Room ${roomId} deleted to free memory (empty)`);
+          }
         }
       }
     });

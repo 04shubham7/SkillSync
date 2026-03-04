@@ -15,7 +15,11 @@ function serializeInterview(i: any) {
 
 export async function GET() {
   try {
-    const interviews = await prisma.interview.findMany({ orderBy: { createdAt: 'desc' } });
+    // Antigravity optimization: Limit to 50 most recent records to improve response latency
+    const interviews = await prisma.interview.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 50
+    });
     return NextResponse.json(interviews.map(serializeInterview));
   } catch (err) {
     console.error('GET /api/interviews error', err);
@@ -25,7 +29,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions as any);
+    const session: any = await getServerSession(authOptions as any);
     if (!session?.user?.email) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
 
     // Creator user (allow any authenticated user; interviewer role optional)

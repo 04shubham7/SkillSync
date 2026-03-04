@@ -10,7 +10,7 @@ import { sanitizeUserId } from "@/lib/utils";
 
 export const streamTokenProvider = async () => {
   try {
-    const session = await getServerSession();
+    const session: any = await getServerSession();
 
     if (!session?.user?.email) {
       throw new Error("User not authenticated");
