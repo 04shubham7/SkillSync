@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+// @ts-ignore
 import { getToken } from 'next-auth/jwt';
 
 export async function middleware(req: NextRequest) {
