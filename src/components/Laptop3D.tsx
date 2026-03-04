@@ -12,9 +12,11 @@ import {
   DoubleSide,
   PointLight,
   MeshPhysicalMaterial,
-  AmbientLight,
-  DirectionalLight,
-  Mesh
+  BufferGeometry,
+  BufferAttribute,
+  PointsMaterial,
+  AdditiveBlending,
+  Points
 } from 'three';
 
 import './Laptop3D.css';
@@ -187,6 +189,35 @@ export default function Laptop3D({
     const clock = { elapsed: 0 };
     let animationId: number;
 
+    // Floating Antigravity Particles
+    const particleCount = 100;
+    const particlesGeometry = new BufferGeometry();
+    const particlesPosition = new Float32Array(particleCount * 3);
+    const particlesVelocity = new Float32Array(particleCount);
+
+    for (let i = 0; i < particleCount; i++) {
+      // Random position around the laptop
+      particlesPosition[i * 3] = (Math.random() - 0.5) * 10; // x
+      particlesPosition[i * 3 + 1] = (Math.random() - 0.5) * 10; // y
+      particlesPosition[i * 3 + 2] = (Math.random() - 0.5) * 10; // z
+
+      // Upward velocity
+      particlesVelocity[i] = Math.random() * 0.02 + 0.01;
+    }
+
+    particlesGeometry.setAttribute('position', new BufferAttribute(particlesPosition, 3));
+
+    const particlesMaterial = new PointsMaterial({
+      color: 0xa855f7, // purple-500
+      size: 0.05,
+      transparent: true,
+      opacity: 0.6,
+      blending: AdditiveBlending
+    });
+
+    const particleSystem = new Points(particlesGeometry, particlesMaterial);
+    scene.add(particleSystem);
+
     // Mouse interaction
     let mouseX = 0;
     let mouseY = 0;
@@ -220,6 +251,24 @@ export default function Laptop3D({
       if (screenGlow && screen.material instanceof MeshStandardMaterial) {
         screen.material.emissiveIntensity = 0.5 + Math.sin(clock.elapsed * 2) * 0.15;
       }
+
+      // Animate particles (Antigravity effect)
+      const positions = particleSystem.geometry.attributes.position.array as Float32Array;
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3 + 1] += particlesVelocity[i]; // Move up
+
+        // Rotate slowly around center
+        const x = positions[i * 3];
+        const z = positions[i * 3 + 2];
+        positions[i * 3] = x * Math.cos(0.005) - z * Math.sin(0.005);
+        positions[i * 3 + 2] = z * Math.cos(0.005) + x * Math.sin(0.005);
+
+        // Reset if too high
+        if (positions[i * 3 + 1] > 5) {
+          positions[i * 3 + 1] = -5;
+        }
+      }
+      particleSystem.geometry.attributes.position.needsUpdate = true;
 
       renderer.render(scene, camera);
     };
@@ -258,8 +307,8 @@ export default function Laptop3D({
       trackpadGeometry.dispose();
       trackpadMaterial.dispose();
 
-      if (container) {
-        container.removeChild(renderer.domElement);
+      if (containerRef.current) {
+        containerRef.current.removeChild(renderer.domElement);
       }
     };
   }, [size, rotationSpeed, floatSpeed, screenGlow]);

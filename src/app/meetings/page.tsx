@@ -73,7 +73,7 @@ export default function MeetingsPage() {
     <div className="p-6">
       <h2 className="text-2xl font-semibold mb-4">Meetings</h2>
 
-      {session?.user?.role !== "interviewer" ? (
+      {(session as any)?.user?.role !== "interviewer" ? (
         <p className="text-sm text-muted-foreground">You can view upcoming meetings here.</p>
       ) : (
         <form onSubmit={createInterview} className="mb-6 space-y-2">
@@ -107,7 +107,7 @@ export default function MeetingsPage() {
               <Button variant="ghost" onClick={() => { navigator.clipboard.writeText(createdCode || ''); alert('Code copied'); }}>Copy</Button>
             </div>
             <div className="mt-4 flex justify-end">
-                <Button onClick={() => { setShowCreated(false); if (createdId) window.location.href = `/meeting/${createdId}`; }}>Go to Room</Button>
+              <Button onClick={() => { setShowCreated(false); if (createdId) window.location.href = `/meeting/${createdId}`; }}>Go to Room</Button>
             </div>
           </div>
         </div>

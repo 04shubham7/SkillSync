@@ -34,7 +34,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
 
-    const session = await getServerSession(authOptions as any);
+    const session: any = await getServerSession(authOptions as any);
     if (!session?.user?.email) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
 
     const interview = await prisma.interview.findUnique({ where: { id } });
@@ -86,7 +86,7 @@ export async function DELETE(_req: Request, { params }: { params: { id: string }
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
 
-    const session = await getServerSession(authOptions as any);
+    const session: any = await getServerSession(authOptions as any);
     if (!session?.user?.email) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
 
     const interview = await prisma.interview.findUnique({ where: { id } });

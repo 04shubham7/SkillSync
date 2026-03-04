@@ -11,7 +11,7 @@ export type TokenPayload = {
 const SECRET = process.env.NEXTAUTH_SECRET || "";
 
 export function signPayload(payload: TokenPayload, opts: jwt.SignOptions = {}) {
-  return jwt.sign(payload as object, SECRET, { expiresIn: "1h", issuer: "codesync", ...opts });
+  return jwt.sign(payload as object, SECRET, { expiresIn: "1h", issuer: "skill-sync", ...opts });
 }
 
 export function verifyToken(token?: string): TokenPayload | null {

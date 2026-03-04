@@ -6,7 +6,7 @@ import prisma from '@/lib/prisma';
 export async function POST(req: Request) {
   try {
     // require authenticated user to resolve join-by-code
-    const session = await getServerSession(authOptions as any);
+    const session: any = await getServerSession(authOptions as any);
     if (!session?.user?.email) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 });
 
     const body = await req.json();

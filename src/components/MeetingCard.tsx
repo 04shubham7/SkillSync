@@ -17,7 +17,7 @@ import { motion } from "framer-motion";
 function MeetingCard({ interview }: { interview: Interview }) {
     const router = useRouter();
     const status = getMeetingStatus(interview);
-    const formattedDate = format(new Date(interview.startTime), "EEEE, MMMM d · h:mm a");
+    const formattedDate = format(new Date(Number(interview.startTime)), "EEEE, MMMM d · h:mm a");
 
     return (
         <motion.div
