@@ -29,7 +29,7 @@ export async function GET(req: Request) {
 
   const signed = jwt.sign(payload, process.env.NEXTAUTH_SECRET || "", {
     expiresIn: "1h",
-    issuer: "codesync",
+    issuer: "skill-sync",
   });
 
   const res = NextResponse.json({ token: signed });
