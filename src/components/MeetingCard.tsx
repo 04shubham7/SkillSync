@@ -16,7 +16,7 @@ import { Button } from "./ui/button";
 function MeetingCard({ interview }: { interview: Interview }) {
     const router = useRouter();
     const status = getMeetingStatus(interview);
-    const formattedDate = format(new Date(interview.startTime), "EEEE, MMMM d · h:mm a");
+    const formattedDate = format(new Date(Number(interview.startTime)), "EEEE, MMMM d · h:mm a");
 
     return (
         <Card className="group h-full w-full flex flex-col rounded-xl border border-white/10 bg-gradient-to-br from-white/5 to-white/2 dark:from-white/5 dark:to-white/1 backdrop-blur-md hover:border-blue-400/40 transition-colors duration-300 relative overflow-hidden">
@@ -34,8 +34,8 @@ function MeetingCard({ interview }: { interview: Interview }) {
                                 status === "live"
                                     ? "default"
                                     : status === "upcoming"
-                                    ? "secondary"
-                                    : "outline"
+                                        ? "secondary"
+                                        : "outline"
                             }
                         >
                             {status === "live" ? "Live Now" : status === "upcoming" ? "Upcoming" : "Completed"}

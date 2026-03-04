@@ -15,7 +15,11 @@ import {
   DoubleSide,
   PointLight,
   MeshPhysicalMaterial,
-  Color
+  BufferGeometry,
+  BufferAttribute,
+  PointsMaterial,
+  AdditiveBlending,
+  Points
 } from 'three';
 
 import './Laptop3D.css';
@@ -39,7 +43,7 @@ export default function Laptop3D({
     if (!containerRef.current) return;
 
     const scene = new Scene();
-    
+
     const camera = new PerspectiveCamera(
       45,
       containerRef.current.clientWidth / containerRef.current.clientHeight,
@@ -49,8 +53,8 @@ export default function Laptop3D({
     camera.position.set(0, 2, 5);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new WebGLRenderer({ 
-      antialias: true, 
+    const renderer = new WebGLRenderer({
+      antialias: true,
       alpha: true,
       powerPreference: "high-performance"
     });
@@ -162,7 +166,7 @@ export default function Laptop3D({
     const codeLine3 = createCodeLine(1.0, -0.5, 0);
     const codeLine4 = createCodeLine(1.6, -0.2, -0.15);
     const codeLine5 = createCodeLine(1.2, -0.4, -0.3);
-    
+
     laptopGroup.add(codeLine1, codeLine2, codeLine3, codeLine4, codeLine5);
 
     // Trackpad
@@ -186,6 +190,35 @@ export default function Laptop3D({
     // Animation variables
     const clock = { elapsed: 0 };
     let animationId: number;
+
+    // Floating Antigravity Particles
+    const particleCount = 100;
+    const particlesGeometry = new BufferGeometry();
+    const particlesPosition = new Float32Array(particleCount * 3);
+    const particlesVelocity = new Float32Array(particleCount);
+
+    for (let i = 0; i < particleCount; i++) {
+      // Random position around the laptop
+      particlesPosition[i * 3] = (Math.random() - 0.5) * 10; // x
+      particlesPosition[i * 3 + 1] = (Math.random() - 0.5) * 10; // y
+      particlesPosition[i * 3 + 2] = (Math.random() - 0.5) * 10; // z
+
+      // Upward velocity
+      particlesVelocity[i] = Math.random() * 0.02 + 0.01;
+    }
+
+    particlesGeometry.setAttribute('position', new BufferAttribute(particlesPosition, 3));
+
+    const particlesMaterial = new PointsMaterial({
+      color: 0xa855f7, // purple-500
+      size: 0.05,
+      transparent: true,
+      opacity: 0.6,
+      blending: AdditiveBlending
+    });
+
+    const particleSystem = new Points(particlesGeometry, particlesMaterial);
+    scene.add(particleSystem);
 
     // Mouse interaction
     let mouseX = 0;
@@ -212,7 +245,7 @@ export default function Laptop3D({
       // Mouse interaction - subtle tilt
       const targetRotationX = mouseY * 0.1;
       const targetRotationY = Math.PI * 0.15 + mouseX * 0.2;
-      
+
       laptopGroup.rotation.x += (targetRotationX - laptopGroup.rotation.x) * 0.05;
       laptopGroup.rotation.y += (targetRotationY - laptopGroup.rotation.y) * 0.05;
 
@@ -220,6 +253,24 @@ export default function Laptop3D({
       if (screenGlow && screen.material instanceof MeshStandardMaterial) {
         screen.material.emissiveIntensity = 0.5 + Math.sin(clock.elapsed * 2) * 0.15;
       }
+
+      // Animate particles (Antigravity effect)
+      const positions = particleSystem.geometry.attributes.position.array as Float32Array;
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3 + 1] += particlesVelocity[i]; // Move up
+
+        // Rotate slowly around center
+        const x = positions[i * 3];
+        const z = positions[i * 3 + 2];
+        positions[i * 3] = x * Math.cos(0.005) - z * Math.sin(0.005);
+        positions[i * 3 + 2] = z * Math.cos(0.005) + x * Math.sin(0.005);
+
+        // Reset if too high
+        if (positions[i * 3 + 1] > 5) {
+          positions[i * 3 + 1] = -5;
+        }
+      }
+      particleSystem.geometry.attributes.position.needsUpdate = true;
 
       renderer.render(scene, camera);
     };
@@ -231,7 +282,7 @@ export default function Laptop3D({
       if (!containerRef.current) return;
       const width = containerRef.current.clientWidth;
       const height = containerRef.current.clientHeight;
-      
+
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
@@ -245,7 +296,7 @@ export default function Laptop3D({
       window.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(animationId);
       resizeObserver.disconnect();
-      
+
       renderer.dispose();
       baseGeometry.dispose();
       baseMaterial.dispose();
@@ -257,7 +308,7 @@ export default function Laptop3D({
       screenMaterial.dispose();
       trackpadGeometry.dispose();
       trackpadMaterial.dispose();
-      
+
       if (containerRef.current) {
         containerRef.current.removeChild(renderer.domElement);
       }

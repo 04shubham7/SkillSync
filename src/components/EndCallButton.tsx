@@ -19,7 +19,7 @@ function EndCallButton() {
       await call.endCall();
 
       // If the call contains a meeting id or stream id, attempt to mark interview completed
-      const meetingId = call.state?.meetingId || call.state?.meeting || null;
+      const meetingId = (call.state as any)?.meetingId || (call.state as any)?.meeting || null;
       if (meetingId) {
         try {
           await fetch(`/api/interviews/${meetingId}`, {

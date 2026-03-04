@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Id } from "../../convex/_generated/dataModel";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { MessageSquareIcon, StarIcon } from "lucide-react";
@@ -21,7 +20,7 @@ import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 
-function CommentDialog({ interviewId }: { interviewId: Id<"interviews"> }) {
+function CommentDialog({ interviewId }: { interviewId: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState("3");
@@ -114,7 +113,7 @@ function CommentDialog({ interviewId }: { interviewId: Id<"interviews"> }) {
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <Avatar className="h-8 w-8">
-                              <AvatarImage src={interviewer.image} />
+                              <AvatarImage src={interviewer.image || undefined} />
                               <AvatarFallback>{interviewer.initials}</AvatarFallback>
                             </Avatar>
                             <div>
