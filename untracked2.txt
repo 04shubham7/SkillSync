@@ -1,0 +1,8 @@
+build.log
+build_final.txt
+diff.txt
+diff2.txt
+ts_errors.log
+ts_errors.txt
+untracked.txt
+untracked2.txt
