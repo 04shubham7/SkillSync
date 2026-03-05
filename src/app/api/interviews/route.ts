@@ -15,15 +15,24 @@ function serializeInterview(i: any) {
 
 export async function GET() {
   try {
-    // Antigravity optimization: Limit to 50 most recent records to improve response latency
     const interviews = await prisma.interview.findMany({
       orderBy: { createdAt: 'desc' },
-      take: 50
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        startTime: true,
+        endTime: true,
+        status: true,
+        meetingCode: true,
+        streamCallId: true,
+        ownerId: true,
+      }
     });
     return NextResponse.json(interviews.map(serializeInterview));
   } catch (err) {
     console.error('GET /api/interviews error', err);
-    return NextResponse.json({ error: 'Failed to fetch interviews' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch interviews. Please try again later.' }, { status: 500 });
   }
 }
 
@@ -39,13 +48,17 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'Invalid request payload' }, { status: 400 });
+    }
+
     const { title, description, startTime, meetingCode, candidateId, interviewerIds, streamCallId, status, instant } = body;
     // For instant meetings we auto-fill startTime
     const effectiveStart = instant ? Date.now() : startTime;
-    if (!effectiveStart) {
-      return NextResponse.json({ error: 'Missing startTime (or set instant=true)' }, { status: 400 });
+    if (!effectiveStart || isNaN(Number(effectiveStart))) {
+      return NextResponse.json({ error: 'Missing or invalid startTime (or set instant=true)' }, { status: 400 });
     }
-    const finalTitle = title && title.trim().length > 0 ? title.trim() : (instant ? 'Instant Meeting' : 'Untitled Interview');
+    const finalTitle = title && typeof title === 'string' && title.trim().length > 0 ? title.trim() : (instant ? 'Instant Meeting' : 'Untitled Interview');
 
     // if client provided a custom code, validate uniqueness and format
     const makeCode = (len = 6) => {
@@ -84,6 +97,17 @@ export async function POST(req: Request) {
         meetingCode: code,
         streamCallId: streamCallId || null,
       },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        startTime: true,
+        endTime: true,
+        status: true,
+        meetingCode: true,
+        streamCallId: true,
+        ownerId: true,
+      }
     });
 
     // Upsert the Stream channel so chat exists immediately. Call the internal endpoint server-side.
