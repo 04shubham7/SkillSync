@@ -1,0 +1,128 @@
+
+> codesync@0.1.0 build
+> next build
+
+  ▲ Next.js 14.2.23
+  - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+./node_modules/@react-three/drei/core/Effects.js
+Attempted import error: 'WebGLMultisampleRenderTarget' is not exported from 'three' (imported as 'WebGLMultisampleRenderTarget').
+
+Import trace for requested module:
+./node_modules/@react-three/drei/core/Effects.js
+./node_modules/@react-three/drei/index.js
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+./node_modules/@react-three/drei/core/useFBO.js
+Attempted import error: 'WebGLMultisampleRenderTarget' is not exported from 'three' (imported as 'THREE').
+
+Import trace for requested module:
+./node_modules/@react-three/drei/core/useFBO.js
+./node_modules/@react-three/drei/index.js
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+./node_modules/troika-three-text/dist/troika-three-text.esm.js
+Attempted import error: 'PlaneBufferGeometry' is not exported from 'three' (imported as 'PlaneBufferGeometry').
+
+Import trace for requested module:
+./node_modules/troika-three-text/dist/troika-three-text.esm.js
+./node_modules/@react-three/drei/core/Text.js
+./node_modules/@react-three/drei/index.js
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+./node_modules/troika-three-text/dist/troika-three-text.esm.js
+Attempted import error: 'PlaneBufferGeometry' is not exported from 'three' (imported as 'PlaneBufferGeometry').
+
+Import trace for requested module:
+./node_modules/troika-three-text/dist/troika-three-text.esm.js
+./node_modules/@react-three/drei/core/Text.js
+./node_modules/@react-three/drei/index.js
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+./src/components/HeroCanvas.tsx
+Attempted import error: 'Sparkles' is not exported from '@react-three/drei' (imported as 'Sparkles').
+
+Import trace for requested module:
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+./node_modules/@react-three/drei/core/Effects.js
+Attempted import error: 'WebGLMultisampleRenderTarget' is not exported from 'three' (imported as 'WebGLMultisampleRenderTarget').
+
+Import trace for requested module:
+./node_modules/@react-three/drei/core/Effects.js
+./node_modules/@react-three/drei/index.js
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+./node_modules/@react-three/drei/core/useFBO.js
+Attempted import error: 'WebGLMultisampleRenderTarget' is not exported from 'three' (imported as 'THREE').
+
+Import trace for requested module:
+./node_modules/@react-three/drei/core/useFBO.js
+./node_modules/@react-three/drei/index.js
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+./node_modules/troika-three-text/dist/troika-three-text.esm.js
+Attempted import error: 'PlaneBufferGeometry' is not exported from 'three' (imported as 'PlaneBufferGeometry').
+
+Import trace for requested module:
+./node_modules/troika-three-text/dist/troika-three-text.esm.js
+./node_modules/@react-three/drei/core/Text.js
+./node_modules/@react-three/drei/index.js
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+./node_modules/troika-three-utils/dist/troika-three-utils.esm.js
+Attempted import error: 'CylinderBufferGeometry' is not exported from 'three' (imported as 'CylinderBufferGeometry').
+
+Import trace for requested module:
+./node_modules/troika-three-utils/dist/troika-three-utils.esm.js
+./node_modules/troika-three-text/dist/troika-three-text.esm.js
+./node_modules/@react-three/drei/core/Text.js
+./node_modules/@react-three/drei/index.js
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+./src/components/HeroCanvas.tsx
+Attempted import error: 'Sparkles' is not exported from '@react-three/drei' (imported as 'Sparkles').
+
+Import trace for requested module:
+./src/components/HeroCanvas.tsx
+./src/components/Hero.tsx
+./src/app/(root)/(home)/page.tsx
+
+   Skipping validation of types
+   Linting ...
+
+Failed to compile.
+
+./src/components/FloatingLines.tsx
+458:30  Warning: The ref value 'containerRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'containerRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+./src/components/HeroCanvas.tsx
+22:10  Error: Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free.  @typescript-eslint/ban-ts-comment
+50:8  Error: Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free.  @typescript-eslint/ban-ts-comment
+
+./src/components/Laptop3D.tsx
+18:3  Error: 'Color' is defined but never used.  @typescript-eslint/no-unused-vars
+314:22  Warning: The ref value 'containerRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'containerRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/basic-features/eslint#disabling-rules
